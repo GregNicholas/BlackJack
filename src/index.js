@@ -1,18 +1,28 @@
-const messageEl = document.getElementById("message-el");
-const cardsEl = document.getElementById("cards-el");
-const sumEl = document.getElementById("sum-el");
+const messageDisplay = document.getElementById("message-display");
+const cardsDisplay = document.getElementById("cards-display");
+const sumDisplay = document.getElementById("sum-display");
 const startGameBtn = document.getElementById("start-game");
 const newCardBtn = document.getElementById("new-card");
 const card1 = document.querySelector(".card1");
 const card2 = document.querySelector(".card2");
-const cardsDisplay = document.getElementById("cards-display");
 let deckId = null;
 let cards = [];
+let numCards = 0;
 let sum = 0;
 let hasBlackJack = false;
 let isAlive = false;
-let message = "";
-console.log("HASBJ: ", hasBlackJack);
+
+const checkGameStatus = () => {
+  // if (sum === 21) {
+  //   hasBlackJack = true;
+  //   messageDisplay.textContent = "You have blackjack!";
+  // }
+  // if (sum > 21) {
+  //   isAlive = false;
+  //   messageDisplay.textContent = "Bust!";
+  // }
+};
+
 const getDeck = async () => {
   cardsDisplay.innerHTML = "";
   fetch("https://deckofcardsapi.com/api/deck/new/draw/?count=2")
@@ -32,11 +42,10 @@ const getDeck = async () => {
       `;
       cardsDisplay.appendChild(card1);
       cardsDisplay.appendChild(card2);
+      numCards = 2;
       sum = getSum(cards);
-      sumEl.textContent = sum;
-      if (sum === 21) {
-        hasBlackJack = true;
-      }
+      sumDisplay.textContent = sum;
+      checkGameStatus();
     })
     .catch((err) => {
       console.log(err);
@@ -76,6 +85,7 @@ const getSum = (arr) => {
 };
 
 function startGame() {
+  messageDisplay.textContent = "Good luck!";
   getDeck();
   hasBlackJack = false;
   isAlive = true;
@@ -91,29 +101,25 @@ const drawNewCard = () => {
     fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
       .then((res) => res.json())
       .then((data) => {
+        numCards++;
         newCard = data.cards[0];
         cards.push(newCard);
         console.log(cards);
         const newCardSlot = document.createElement("div");
-        newCardSlot.classList.add("card-slot", "card3");
+        newCardSlot.classList.add("card-slot", `card${numCards}`);
         newCardSlot.innerHTML = `<img src=${newCard.images.png} class="card" />`;
         cardsDisplay.appendChild(newCardSlot);
         sum = getSum(cards);
         console.log(sum);
-        sumEl.textContent = sum;
-        if (sum === 21) {
-          hasBlackJack = true;
-        }
-        if (sum > 21) {
-          isAlive = false;
-        }
+        sumDisplay.textContent = sum;
+        checkGameStatus();
       })
       .catch((err) => {
         console.log(err);
       });
 
     // sum = getSum(cards);
-    // sumEl.textContent = sum;
+    // sumDisplay.textContent = sum;
     // if (sum === 21) {
     //   hasBlackJack = true;
     // }

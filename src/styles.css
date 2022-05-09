@@ -31,8 +31,12 @@ h1 {
 }
 
 #cards-display {
-  margin-left: 2rem;
+  margin-left: 1rem;
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100vw;
+  height: 300px;
 }
 
 div.card-slot {
@@ -41,18 +45,41 @@ div.card-slot {
   height: 120px;
   width: calc(120px * 5 / 7);
   margin-right: 5px;
-  transform: rotate(-20deg);
+  transform: rotate(-15deg);
 }
 
+/* .card1 {
+  position: relative;
+  left: 0px;
+}
 .card2 {
   position: relative;
-  right: 50px;
+  left: -50px;
 }
-
 .card3 {
   position: relative;
-  right: 100px;
+  left: -100px;
 }
+.card4 {
+  position: relative;
+  left: -150px;
+}
+.card5 {
+  position: relative;
+  left: -200px;
+}
+.card6 {
+  position: relative;
+  left: -250px;
+}
+.card7 {
+  position: relative;
+  left: -300px;
+}
+.card8 {
+  position: relative;
+  left: -350px;
+} */
 /* div.card-slot:nth-of-type(1) {
   margin-bottom: 5px;
 } */
