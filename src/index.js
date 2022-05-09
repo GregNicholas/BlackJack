@@ -74,6 +74,9 @@ function startGame() {
 }
 
 //continue working on new card
+//create another card element and display
+//sum cards
+//check win or bust conditions
 const drawNewCard = () => {
   if (isAlive && !hasBlackJack) {
     let newCard = null;
