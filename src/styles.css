@@ -1,0 +1,52 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url("images/bjtable.jpg");
+  background-size: cover;
+}
+
+.container {
+  max-width: 600px;
+  margin: 4rem auto;
+  text-align: center;
+  font-size: 1.2rem;
+  color: gold;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+.btn-game {
+  background: gold;
+  color: green;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 5px 14px;
+}
+
+.btn-game:hover {
+  background: goldenrod;
+}
+
+#cards {
+  display: flex;
+}
+
+div.card-slot {
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 120px;
+  width: calc(120px * 5 / 7);
+  margin-right: 5px;
+}
+
+/* div.card-slot:nth-of-type(1) {
+  margin-bottom: 5px;
+} */
+
+img.card {
+  width: 100%;
+  height: 100%;
+}
