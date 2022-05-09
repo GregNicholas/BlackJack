@@ -30,7 +30,8 @@ h1 {
   background: goldenrod;
 }
 
-#cards {
+#cards-display {
+  margin-left: 2rem;
   display: flex;
 }
 
@@ -40,8 +41,18 @@ div.card-slot {
   height: 120px;
   width: calc(120px * 5 / 7);
   margin-right: 5px;
+  transform: rotate(-20deg);
 }
 
+.card2 {
+  position: relative;
+  right: 50px;
+}
+
+.card3 {
+  position: relative;
+  right: 100px;
+}
 /* div.card-slot:nth-of-type(1) {
   margin-bottom: 5px;
 } */
