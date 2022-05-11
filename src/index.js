@@ -1,50 +1,77 @@
 const messageDisplay = document.getElementById("message-display");
-const cardsDisplay = document.getElementById("cards-display");
+const playerCardsDisplay = document.getElementById("player-cards");
+const dealerCardsDisplay = document.getElementById("dealer-cards");
 const sumDisplay = document.getElementById("sum-display");
+const dealerScoreDisplay = document.getElementById("dealer-score-display");
 const startGameBtn = document.getElementById("start-game");
 const newCardBtn = document.getElementById("new-card");
-const card1 = document.querySelector(".card1");
-const card2 = document.querySelector(".card2");
 let deckId = null;
-let cards = [];
+let playerCards = [];
+let dealerCards = [];
 let numCards = 0;
-let sum = 0;
+let playerSum = 0;
+let dealerSum = 0;
 let hasBlackJack = false;
-let isAlive = false;
+let gameOn = false;
 
 const checkGameStatus = () => {
-  // if (sum === 21) {
-  //   hasBlackJack = true;
-  //   messageDisplay.textContent = "You have blackjack!";
-  // }
-  // if (sum > 21) {
-  //   isAlive = false;
-  //   messageDisplay.textContent = "Bust!";
-  // }
+  if (playerSum === 21) {
+    hasBlackJack = true;
+    gameOn = false;
+    messageDisplay.textContent = "You have blackjack!";
+  } else if (playerSum > 21) {
+    gameOn = false;
+    messageDisplay.textContent = "Bust!";
+  } else if (playerCards.length > 4) {
+    messageDisplay.textContent = "5 Card Charlie! You win!";
+    gameOn = false;
+  }
+  if (!gameOn) {
+    console.log("end game");
+    document.querySelector(".dealer-hidden-card").innerHTML = `
+        <img src=${dealerCards[0].images.png} class="card" />
+      `;
+    //fill dealer hand
+  }
 };
 
 const getDeck = async () => {
-  cardsDisplay.innerHTML = "";
-  fetch("https://deckofcardsapi.com/api/deck/new/draw/?count=2")
+  playerCardsDisplay.innerHTML = "";
+  dealerCardsDisplay.innerHTML = "";
+  fetch("https://deckofcardsapi.com/api/deck/new/draw/?count=4")
     .then((res) => res.json())
     .then((data) => {
       deckId = data.deck_id;
-      cards = data.cards;
+      playerCards = [data.cards[0], data.cards[1]];
+      dealerCards = [data.cards[2], data.cards[3]];
       const card1 = document.createElement("div");
       card1.classList.add("card-slot", "card1");
       const card2 = document.createElement("div");
       card2.classList.add("card-slot", "card2");
+      const card3 = document.createElement("div");
+      card3.classList.add("card-slot", "card1", "dealer-hidden-card");
+      const card4 = document.createElement("div");
+      card4.classList.add("card-slot", "card2");
       card1.innerHTML = `
-        <img src=${cards[0].images.png} class="card" />
+        <img src=${playerCards[0].images.png} class="card" />
       `;
       card2.innerHTML = `
-        <img src=${cards[1].images.png} class="card" />
+        <img src=${playerCards[1].images.png} class="card" />
       `;
-      cardsDisplay.appendChild(card1);
-      cardsDisplay.appendChild(card2);
+      card3.innerHTML = `
+        <img src="src/images/card-back.png" class="card" />
+      `;
+      card4.innerHTML = `
+        <img src=${dealerCards[1].images.png} class="card" />
+      `;
+      playerCardsDisplay.appendChild(card1);
+      playerCardsDisplay.appendChild(card2);
+      dealerCardsDisplay.appendChild(card3);
+      dealerCardsDisplay.appendChild(card4);
       numCards = 2;
-      sum = getSum(cards);
-      sumDisplay.textContent = sum;
+      playerSum = getSum(playerCards);
+      sumDisplay.textContent = "Player: " + playerSum;
+      dealerScoreDisplay.textContent = "Dealer: " + getSum([data.cards[3]]);
       checkGameStatus();
     })
     .catch((err) => {
@@ -70,7 +97,6 @@ const getSum = (arr) => {
   };
 
   let numAces = arr.filter((c) => c.value === "ACE").length;
-  console.log("ACES: ", numAces);
 
   let sum = arr.reduce((acc, cur) => {
     return acc + values[cur.value];
@@ -88,7 +114,7 @@ function startGame() {
   messageDisplay.textContent = "Good luck!";
   getDeck();
   hasBlackJack = false;
-  isAlive = true;
+  gameOn = true;
 }
 
 //continue working on new card
@@ -96,36 +122,25 @@ function startGame() {
 //sum cards
 //check win or bust conditions
 const drawNewCard = () => {
-  if (isAlive && !hasBlackJack) {
+  if (gameOn && !hasBlackJack) {
     let newCard = null;
     fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
       .then((res) => res.json())
       .then((data) => {
         numCards++;
         newCard = data.cards[0];
-        cards.push(newCard);
-        console.log(cards);
+        playerCards.push(newCard);
         const newCardSlot = document.createElement("div");
         newCardSlot.classList.add("card-slot", `card${numCards}`);
         newCardSlot.innerHTML = `<img src=${newCard.images.png} class="card" />`;
-        cardsDisplay.appendChild(newCardSlot);
-        sum = getSum(cards);
-        console.log(sum);
-        sumDisplay.textContent = sum;
+        playerCardsDisplay.appendChild(newCardSlot);
+        playerSum = getSum(playerCards);
+        sumDisplay.textContent = "Player: " + playerSum;
         checkGameStatus();
       })
       .catch((err) => {
         console.log(err);
       });
-
-    // sum = getSum(cards);
-    // sumDisplay.textContent = sum;
-    // if (sum === 21) {
-    //   hasBlackJack = true;
-    // }
-    // if (sum > 21) {
-    //   isAlive = false;
-    // }
   }
 };
 
