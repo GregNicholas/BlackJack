@@ -77,6 +77,14 @@ div.card-slot {
   position: relative;
   left: -200px;
 }
+.card6 {
+  position: relative;
+  left: -250px;
+}
+.card7 {
+  position: relative;
+  left: -300px;
+}
 
 /* div.card-slot:nth-of-type(1) {
   margin-bottom: 5px;

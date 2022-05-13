@@ -10,20 +10,39 @@ let deckId = null;
 let playerCards = [];
 let dealerCards = [];
 let numCards = 0;
+let numDealerCards = 0;
 let playerSum = 0;
 let dealerSum = 0;
 let hasBlackJack = false;
 let gameOn = false;
 
+const endGameDisplay = () => {
+  console.log("D, P:", dealerSum, playerSum);
+  if (playerSum > 21) {
+    messageDisplay.textContent = "BUST!";
+  }
+  if (playerSum === dealerSum) {
+    messageDisplay.textContent = "PUSH";
+  } else if (playerSum === 21) {
+    messageDisplay.textContent = "You have blackjack!";
+  } else if (playerSum < dealerSum && dealerSum <= 21) {
+    messageDisplay.textContent = "Dealer wins.";
+  } else {
+    messageDisplay.textContent = "You win!";
+  }
+};
+
 const endGame = () => {
-  console.log("end game");
   document.querySelector(".dealer-hidden-card").innerHTML = `
         <img src=${dealerCards[0].images.png} class="card" />
       `;
   dealerSum = getSum(dealerCards);
-  console.log(dealerSum);
+
   if (dealerSum < 17) {
     fillDealerHand();
+  } else {
+    dealerScoreDisplay.textContent = "Dealer: " + dealerSum;
+    endGameDisplay();
   }
 };
 
@@ -39,8 +58,10 @@ const checkGameStatus = () => {
     messageDisplay.textContent = "5 Card Charlie! You win!";
     gameOn = false;
   }
-  if (!gameOn) {
+  if (!gameOn && playerSum <= 21) {
     endGame();
+  } else if (!gameOn) {
+    endGameDisplay();
   }
 };
 
@@ -78,6 +99,7 @@ const getDeck = async () => {
       dealerCardsDisplay.appendChild(card3);
       dealerCardsDisplay.appendChild(card4);
       numCards = 2;
+      numDealerCards = 2;
       playerSum = getSum(playerCards);
       sumDisplay.textContent = "Player: " + playerSum;
       dealerScoreDisplay.textContent = "Dealer: " + getSum([data.cards[3]]);
@@ -154,16 +176,21 @@ const fillDealerHand = () => {
   fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
     .then((res) => res.json())
     .then((data) => {
-      numCards++;
+      numDealerCards++;
       newCard = data.cards[0];
       dealerCards.push(newCard);
       const newCardSlot = document.createElement("div");
-      newCardSlot.classList.add("card-slot", `card${numCards}`);
+      newCardSlot.classList.add("card-slot", `card${numDealerCards}`);
       newCardSlot.innerHTML = `<img src=${newCard.images.png} class="card" />`;
       dealerCardsDisplay.appendChild(newCardSlot);
       dealerSum = getSum(dealerCards);
       dealerScoreDisplay.textContent = "Dealer: " + dealerSum;
-      // checkGameStatus();
+      console.log("DEALING", dealerSum);
+      if (dealerSum < 17) {
+        fillDealerHand();
+      } else {
+        endGameDisplay();
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -171,8 +198,10 @@ const fillDealerHand = () => {
 };
 
 const stand = () => {
-  console.log("STAND");
-  endGame();
+  if (gameOn) {
+    console.log("STAND");
+    endGame();
+  }
 };
 
 startGameBtn.addEventListener("click", startGame);
