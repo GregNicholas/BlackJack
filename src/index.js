@@ -5,6 +5,7 @@ const sumDisplay = document.getElementById("sum-display");
 const dealerScoreDisplay = document.getElementById("dealer-score-display");
 const startGameBtn = document.getElementById("start-game");
 const newCardBtn = document.getElementById("new-card");
+const standBtn = document.getElementById("stand");
 let deckId = null;
 let playerCards = [];
 let dealerCards = [];
@@ -13,6 +14,18 @@ let playerSum = 0;
 let dealerSum = 0;
 let hasBlackJack = false;
 let gameOn = false;
+
+const endGame = () => {
+  console.log("end game");
+  document.querySelector(".dealer-hidden-card").innerHTML = `
+        <img src=${dealerCards[0].images.png} class="card" />
+      `;
+  dealerSum = getSum(dealerCards);
+  console.log(dealerSum);
+  if (dealerSum < 17) {
+    fillDealerHand();
+  }
+};
 
 const checkGameStatus = () => {
   if (playerSum === 21) {
@@ -27,11 +40,7 @@ const checkGameStatus = () => {
     gameOn = false;
   }
   if (!gameOn) {
-    console.log("end game");
-    document.querySelector(".dealer-hidden-card").innerHTML = `
-        <img src=${dealerCards[0].images.png} class="card" />
-      `;
-    //fill dealer hand
+    endGame();
   }
 };
 
@@ -117,10 +126,6 @@ function startGame() {
   gameOn = true;
 }
 
-//continue working on new card
-//create another card element and display
-//sum cards
-//check win or bust conditions
 const drawNewCard = () => {
   if (gameOn && !hasBlackJack) {
     let newCard = null;
@@ -144,5 +149,32 @@ const drawNewCard = () => {
   }
 };
 
+const fillDealerHand = () => {
+  let newCard = null;
+  fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
+    .then((res) => res.json())
+    .then((data) => {
+      numCards++;
+      newCard = data.cards[0];
+      dealerCards.push(newCard);
+      const newCardSlot = document.createElement("div");
+      newCardSlot.classList.add("card-slot", `card${numCards}`);
+      newCardSlot.innerHTML = `<img src=${newCard.images.png} class="card" />`;
+      dealerCardsDisplay.appendChild(newCardSlot);
+      dealerSum = getSum(dealerCards);
+      dealerScoreDisplay.textContent = "Dealer: " + dealerSum;
+      // checkGameStatus();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const stand = () => {
+  console.log("STAND");
+  endGame();
+};
+
 startGameBtn.addEventListener("click", startGame);
 newCardBtn.addEventListener("click", drawNewCard);
+standBtn.addEventListener("click", stand);
