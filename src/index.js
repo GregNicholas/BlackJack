@@ -19,6 +19,7 @@ let dealerSum = 0;
 let gameOn = false;
 let playerPurse = 1000;
 let playerBet = 10;
+let isDrawing = false;
 
 const playerWin = () => {
   console.log("PLAYERWIN");
@@ -78,6 +79,7 @@ const checkGameStatus = () => {
   if (playerSum >= 21 || playerCards.length > 4) {
     endGame();
   }
+  isDrawing = false;
 };
 
 const getDeck = async () => {
@@ -166,7 +168,8 @@ function startGame() {
 }
 
 const drawNewCard = () => {
-  if (gameOn) {
+  if (gameOn && !isDrawing) {
+    isDrawing = true;
     let newCard = null;
     fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
       .then((res) => res.json())
