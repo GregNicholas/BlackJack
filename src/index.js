@@ -159,12 +159,14 @@ const getSum = (arr) => {
 };
 
 function startGame() {
-  console.log("****new game****");
-  messageDisplay.textContent = "Good luck!";
-  playerPurse -= playerBet;
-  purseDisplay.textContent = `Purse: $${playerPurse}`;
-  getDeck();
-  gameOn = true;
+  if (!isDrawing) {
+    isDrawing = true;
+    messageDisplay.textContent = "Good luck!";
+    playerPurse -= playerBet;
+    purseDisplay.textContent = `Purse: $${playerPurse}`;
+    getDeck();
+    gameOn = true;
+  }
 }
 
 const drawNewCard = () => {
