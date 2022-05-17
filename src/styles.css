@@ -1,18 +1,19 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-image: url("src/images/bjtable.jpg");
+  background-image: url("../src/images/bjtable.jpg");
   background-size: cover;
 }
 
 .container {
   max-width: 600px;
-  margin: 4rem auto;
+  margin: 1rem auto;
   text-align: center;
   font-size: 1.2rem;
   color: gold;
 }
 
 h1 {
+  margin: 0;
   font-weight: bold;
   font-size: 3rem;
 }
