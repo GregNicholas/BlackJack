@@ -6,6 +6,9 @@ const dealerScoreDisplay = document.getElementById("dealer-score-display");
 const startGameBtn = document.getElementById("start-game");
 const newCardBtn = document.getElementById("new-card");
 const standBtn = document.getElementById("stand");
+const purseDisplay = document.getElementById("purse");
+const betDisplay = document.getElementById("bet");
+
 let deckId = null;
 let playerCards = [];
 let dealerCards = [];
@@ -13,55 +16,67 @@ let numCards = 0;
 let numDealerCards = 0;
 let playerSum = 0;
 let dealerSum = 0;
-let hasBlackJack = false;
 let gameOn = false;
+let playerPurse = 1000;
+let playerBet = 10;
+
+const playerWin = () => {
+  console.log("PLAYERWIN");
+  playerPurse += playerBet * 2;
+  purseDisplay.textContent = `Purse: $${playerPurse}`;
+};
+
+const pushGame = () => {
+  console.log("PUSH");
+  playerPurse += playerBet;
+  purseDisplay.textContent = `Purse: $${playerPurse}`;
+};
+
+const dealerWin = () => {
+  console.log("DEALERWIN");
+  console.log("dealer wins");
+};
 
 const endGameDisplay = () => {
-  console.log("D, P:", dealerSum, playerSum);
   if (playerSum > 21) {
-    messageDisplay.textContent = "BUST!";
-  }
-  if (playerSum === dealerSum) {
+    messageDisplay.textContent = "BUST! Dealer wins.";
+    dealerWin();
+  } else if (playerSum === dealerSum) {
     messageDisplay.textContent = "PUSH";
+    pushGame();
   } else if (playerSum === 21) {
-    messageDisplay.textContent = "You have blackjack!";
+    messageDisplay.textContent = "21! You win!";
+    playerWin();
   } else if (playerSum < dealerSum && dealerSum <= 21) {
     messageDisplay.textContent = "Dealer wins.";
+    dealerWin();
   } else {
     messageDisplay.textContent = "You win!";
+    playerWin();
   }
 };
 
 const endGame = () => {
+  gameOn = false;
   document.querySelector(".dealer-hidden-card").innerHTML = `
         <img src=${dealerCards[0].images.png} class="card" />
       `;
   dealerSum = getSum(dealerCards);
-
-  if (dealerSum < 17) {
-    fillDealerHand();
+  if (playerSum <= 21) {
+    if (dealerSum < 17) {
+      fillDealerHand();
+    } else {
+      dealerScoreDisplay.textContent = "Dealer: " + dealerSum;
+      endGameDisplay();
+    }
   } else {
-    dealerScoreDisplay.textContent = "Dealer: " + dealerSum;
     endGameDisplay();
   }
 };
 
 const checkGameStatus = () => {
-  if (playerSum === 21) {
-    hasBlackJack = true;
-    gameOn = false;
-    messageDisplay.textContent = "You have blackjack!";
-  } else if (playerSum > 21) {
-    gameOn = false;
-    messageDisplay.textContent = "Bust!";
-  } else if (playerCards.length > 4) {
-    messageDisplay.textContent = "5 Card Charlie! You win!";
-    gameOn = false;
-  }
-  if (!gameOn && playerSum <= 21) {
+  if (playerSum >= 21 || playerCards.length > 4) {
     endGame();
-  } else if (!gameOn) {
-    endGameDisplay();
   }
 };
 
@@ -142,14 +157,16 @@ const getSum = (arr) => {
 };
 
 function startGame() {
+  console.log("****new game****");
   messageDisplay.textContent = "Good luck!";
+  playerPurse -= playerBet;
+  purseDisplay.textContent = `Purse: $${playerPurse}`;
   getDeck();
-  hasBlackJack = false;
   gameOn = true;
 }
 
 const drawNewCard = () => {
-  if (gameOn && !hasBlackJack) {
+  if (gameOn) {
     let newCard = null;
     fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
       .then((res) => res.json())
@@ -185,7 +202,6 @@ const fillDealerHand = () => {
       dealerCardsDisplay.appendChild(newCardSlot);
       dealerSum = getSum(dealerCards);
       dealerScoreDisplay.textContent = "Dealer: " + dealerSum;
-      console.log("DEALING", dealerSum);
       if (dealerSum < 17) {
         fillDealerHand();
       } else {
@@ -199,7 +215,6 @@ const fillDealerHand = () => {
 
 const stand = () => {
   if (gameOn) {
-    console.log("STAND");
     endGame();
   }
 };
