@@ -1,6 +1,10 @@
 <h1 align="center">BlackJack!</h1>
 
 <p>Play some Blackjack</p>
+Requirements: 
+-Play blackjack hand vs dealer
+-Start with $1000
+-Place bet for each hand in $10 increments
 
 ## Built With
 
@@ -18,7 +22,8 @@
 
 ## Screenshots
 
-![Home Page](./src/images/blackjack.png)
+![BlackJack_screenshot](https://user-images.githubusercontent.com/59461870/169229478-b017ffc5-6bf7-46da-b3d6-bff13ed5217b.png)
+
 
 ## Future Possible Updates
 
