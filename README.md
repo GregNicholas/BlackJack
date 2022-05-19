@@ -10,9 +10,9 @@
 
 ## Links
 
-- [Repo](https://about:blank BlackJack "BlackJack app repo")
+- [Repo](https://github.com/GregNicholas/BlackJack "BlackJack app repo")
 
-- [Live](https://**Linkgoeshere** "Live View")
+- [Live](https://gregnicholas.github.io/BlackJack/ "Live View")
 
 - [API](https://deckofcardsapi.com/ "Deck of Cards API")
 
