@@ -11,13 +11,13 @@
     <main class="container">
       <section class="top-info">
         <h1>Blackjack!</h1>
-        <p id="message-display">Want to play a round?</p>
       </section>
       <div id="cards-display">
         <div id="dealer-cards"></div>
         <div id="player-cards"></div>
       </div>
       <section class="bottom-info">
+        <p id="message-display">Want to play a round?</p>
         <p id="player-money">
           <span id="purse">Purse: $1000</span>
           <span id="bet">Bet: $10</span>
@@ -26,6 +26,17 @@
           <span id="sum-display">Player:</span>
           <span id="dealer-score-display">Dealer:</span>
         </p>
+        <div class="slidecontainer">
+          <input
+            type="range"
+            min="10"
+            max="500"
+            step="10"
+            value="50"
+            class="slider"
+            id="myRange"
+          />
+        </div>
         <button class="btn-game" id="start-game">new hand</button>
         <button class="btn-game" id="new-card">hit</button>
         <button class="btn-game" id="stand">stand</button>

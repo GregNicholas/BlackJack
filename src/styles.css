@@ -34,7 +34,8 @@ h1 {
 
 #cards-display {
   width: 100vw;
-  height: 300px;
+  height: 280px;
+  margin: 1rem;
 }
 
 #player-cards,
@@ -44,7 +45,7 @@ h1 {
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
-  height: 50%;
+  margin-bottom: 2rem;
 }
 
 img {
@@ -92,10 +93,42 @@ img.card {
   height: 100%;
 }
 
+.bottom-info p {
+  margin: 0.4rem;
+}
+
 #purse {
   padding-right: 1rem;
 }
 
 #sum-display {
   padding-right: 1rem;
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80%;
+  height: 4px;
+  background: rgb(253, 240, 167);
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: gold;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: goldenrod;
 }
