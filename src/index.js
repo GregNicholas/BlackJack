@@ -8,6 +8,7 @@ const newCardBtn = document.getElementById("new-card");
 const standBtn = document.getElementById("stand");
 const purseDisplay = document.getElementById("purse");
 const betDisplay = document.getElementById("bet");
+const slider = document.getElementById("myRange");
 
 let deckId = null;
 let playerCards = [];
@@ -20,28 +21,49 @@ let gameOn = false;
 let playerPurse = 1000;
 let playerBet = 10;
 let isDrawing = false;
+slider.max = playerPurse;
+
+slider.oninput = (e) => {
+  playerBet = e.target.value;
+  betDisplay.textContent = `Bet: $${playerBet}`;
+};
 
 const playerWin = () => {
   console.log("PLAYERWIN");
-  playerPurse += playerBet * 2;
+  playerPurse += +playerBet * 2;
   purseDisplay.textContent = `Purse: $${playerPurse}`;
 };
 
 const pushGame = () => {
   console.log("PUSH");
-  playerPurse += playerBet;
+  playerPurse += +playerBet;
   purseDisplay.textContent = `Purse: $${playerPurse}`;
 };
 
-const dealerWin = () => {
-  console.log("DEALERWIN");
-  console.log("dealer wins");
+const refillChips = () => {
+  playerPurse = 1000;
+  purseDisplay.textContent = `Purse: $${playerPurse}`;
+  playerBet = 10;
+  slider.value = playerBet;
+  betDisplay.textContent = `Bet: $${playerBet}`;
+  messageDisplay.textContent = "BANKRUPT! Reset $1000";
+};
+
+const calibrateSlider = () => {
+  if (playerPurse < 10) {
+    refillChips();
+  }
+  slider.max = playerPurse;
+  if (playerBet > playerPurse) {
+    playerBet = playerPurse;
+    slider.value = playerBet;
+    betDisplay.textContent = `Bet: $${playerBet}`;
+  }
 };
 
 const endGameDisplay = () => {
   if (playerSum > 21) {
     messageDisplay.textContent = "BUST! Dealer wins.";
-    dealerWin();
   } else if (playerSum === dealerSum) {
     messageDisplay.textContent = "PUSH";
     pushGame();
@@ -50,15 +72,16 @@ const endGameDisplay = () => {
     playerWin();
   } else if (playerSum < dealerSum && dealerSum <= 21) {
     messageDisplay.textContent = "Dealer wins.";
-    dealerWin();
   } else {
     messageDisplay.textContent = "You win!";
     playerWin();
   }
+  calibrateSlider();
 };
 
 const endGame = () => {
   gameOn = false;
+  slider.disabled = false;
   document.querySelector(".dealer-hidden-card").innerHTML = `
         <img src=${dealerCards[0].images.png} class="card" />
       `;
@@ -159,10 +182,11 @@ const getSum = (arr) => {
 };
 
 function startGame() {
-  if (!isDrawing) {
+  if (!isDrawing && !gameOn) {
     isDrawing = true;
+    slider.disabled = true;
     messageDisplay.textContent = "Good luck!";
-    playerPurse -= playerBet;
+    playerPurse -= +playerBet;
     purseDisplay.textContent = `Purse: $${playerPurse}`;
     getDeck();
     gameOn = true;
