@@ -55,7 +55,7 @@ const calibrateSlider = () => {
   }
   slider.max = playerPurse;
   if (playerBet > playerPurse) {
-    playerBet = playerPurse;
+    playerBet = playerPurse / 2 + ((playerPurse / 2) % 10);
     slider.value = playerBet;
     betDisplay.textContent = `Bet: $${playerBet}`;
   }
